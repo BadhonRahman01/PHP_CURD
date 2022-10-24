@@ -3,7 +3,7 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$store_id = $branch_name = $branch_location = $phone = $latitude = $longitude = "";
+$store_id = $branch_name = $branch_location = $phone = $lat = $long = "";
 $store_id_err = $branch_name_err = $branch_location_err = $phone_err = $lat_err = $long_err = ""; 
 
 // Processing form data when form is submitted
@@ -15,17 +15,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $store_id = $input_store_id;
     }
-
+    //echo $input_store_id;
     // Validate branch name
     $input_branch_name = trim($_POST["branch_name"]);
     if(empty($input_branch_name)){
         $branch_name_err = "Please enter a store branch name.";
-    // } elseif(!filter_var($input_branch_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$+[1-20]/")))){
-    //     $branch_name_err = "Please enter a valid store name";
-    // } 
-    }else{
+    } elseif(!filter_var($input_branch_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
+        $branch_name_err = "Please enter a valid store name";
+    } else{
         $branch_name = $input_branch_name;
     }
+    //echo $input_branch_name;
     // Validate branch location
     $input_branch_location = trim($_POST["branch_location"]);
     if(empty($input_branch_location)){
@@ -33,7 +33,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $branch_location = $input_branch_location;
     }
-
+    //echo $input_branch_location;
     // Validate phone
     $input_phone = trim($_POST["phone"]);
     if(empty($input_phone)){
@@ -43,32 +43,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $phone = $input_phone;
     }
-
+   // echo $input_phone;
     // Validate lat
-    $input_lat = trim($_POST["latitude"]);
+    $input_lat = trim($_POST["lat"]);
     if(empty($input_lat)){
         $lat_err = "Please enter latitude of this branch";     
     } else{
-        $latitude = $input_lat;
+        $lat = $input_lat;
     }
-
+   // echo $input_lat;
         // Validate long
-        $input_long = trim($_POST["longitude"]);
+        $input_long = trim($_POST["long"]);
         if(empty($input_long)){
             $long_err = "Please enter a longitude for this branch";     
         } else{
-            $longitude = $input_long;
+            $long = $input_long;
         }
-
-        
+        //echo $input_long;
     // Check input errors before inserting in database
     if(empty($store_id_err) && empty($branch_name_err) && empty($branch_location_err) && empty($phone_err) && empty($lat_err) && empty($long_err)){
 
         // Prepare an insert statement
-        $sql = "INSERT INTO stores (store_id, branch_name, branch_location, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO stores (store_id, branch_name, branch_location, phone, lat, long) VALUES (?, ?, ?, ?, ?, ?)";
 
         if($stmt = mysqli_prepare($link, $sql)){
-           
+
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "isssss", $param_store_id, $param_branch_name, $param_branch_location,$param_phone, $param_lat, $param_long);
             
@@ -77,13 +76,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_branch_name = $branch_name;
             $param_branch_location = $branch_location;
             $param_phone = $phone;
-            $param_lat = $latitude;
-            $param_long = $longitude;
+            $param_lat = $lat;
+            $param_long = $long;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Records created successfully. Redirect to landing page
-
+                echo "Store created successfully.";
                 header("location: index.php");
                 exit();
             } else{
@@ -144,12 +143,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         </div>
                         <div class="form-group">
                             <label>Branch Latitude</label>
-                            <input type="text" name="latitude" class="form-control <?php echo (!empty($lat_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $latitude; ?>">
+                            <input type="text" name="lat" class="form-control <?php echo (!empty($lat_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $lat; ?>">
                             <span class="invalid-feedback"><?php echo $lat_err;?></span>
                         </div>
                         <div class="form-group">
                             <label>Branch longitude</label>
-                            <input type="text" name="longitude" class="form-control <?php echo (!empty($long_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $longitude; ?>">
+                            <input type="text" name="long" class="form-control <?php echo (!empty($long_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $long; ?>">
                             <span class="invalid-feedback"><?php echo $long_err;?></span>
                         </div>
                         <input type="submit" class="btn btn-primary" value="Submit">

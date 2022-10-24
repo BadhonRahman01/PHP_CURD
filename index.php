@@ -60,8 +60,8 @@
                                         echo "<td>" . $row['branch_name'] . "</td>";
                                         echo "<td>" . $row['branch_location'] . "</td>";
                                         echo "<td>" . $row['phone'] . "</td>";
-                                        echo "<td>" . $row['lat'] . "</td>";
-                                        echo "<td>" . $row['long'] . "</td>";
+                                        echo "<td>" . $row['latitude'] . "</td>";
+                                        echo "<td>" . $row['longitude'] . "</td>";
                                         echo "<td>";
                                             echo '<a href="read.php?id='. $row['id'] .'" class="mr-3" title="View Record" data-toggle="tooltip"><span class="fa fa-eye"></span></a>';
                                             echo '<a href="update.php?id='. $row['id'] .'" class="mr-3" title="Update Record" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>';

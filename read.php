@@ -28,8 +28,8 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 $branch_name = $row["branch_name"];
                 $branch_location = $row["branch_location"];
                 $phone = $row["phone"];
-                $lat = $row["lat"];
-                $long = $row["long"];
+                $latitude = $row["latitude"];
+                $longitude = $row["longitude"];
             } else{
                 // URL doesn't contain valid id parameter. Redirect to error page
                 header("location: error.php");
@@ -90,11 +90,11 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                     </div>
                     <div class="form-group">
                         <label>Latitude</label>
-                        <p><b><?php echo $row["lat"]; ?></b></p>
+                        <p><b><?php echo $row["latitude"]; ?></b></p>
                     </div>
                     <div class="form-group">
                         <label>Longitude</label>
-                        <p><b><?php echo $row["long"]; ?></b></p>
+                        <p><b><?php echo $row["longitude"]; ?></b></p>
                     </div>
                     <p><a href="index.php" class="btn btn-primary">Back</a></p>
                 </div>

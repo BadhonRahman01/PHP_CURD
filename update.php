@@ -3,7 +3,7 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$store_id = $branch_name = $branch_location = $phone = $lat = $long = "";
+$store_id = $branch_name = $branch_location = $phone = $latitude = $longitude = "";
 $store_id_err = $branch_name_err = $branch_location_err = $phone_err = $lat_err = $long_err = ""; 
  
 // Processing form data when form is submitted
@@ -48,39 +48,40 @@ if(empty($input_phone)){
 }
 
 // Validate lat
-$input_lat = trim($_POST["lat"]);
+$input_lat = trim($_POST["latitude"]);
 if(empty($input_lat)){
     $lat_err = "Please enter latitude of this branch";     
 } else{
-    $lat = $input_lat;
+    $latitude = $input_lat;
 }
 
     // Validate long
-    $input_long = trim($_POST["long"]);
+    $input_long = trim($_POST["longitude"]);
     if(empty($input_long)){
         $long_err = "Please enter a longitude for this branch";     
     } else{
-        $long = $input_long;
+        $longitude = $input_long;
     }
 
     
     // Check input errors before inserting in database
     if(empty($store_id_err) && empty($branch_name_err) && empty($branch_location_err) && empty($phone_err) && empty($lat_err) && empty($long_err)){
         // Prepare an update statement
-        $sql = "UPDATE stores SET store_id=?, branch_name=?, branch_location=?,phone=?, lat=?, long=? WHERE id=?";
-         
+        $sql = "UPDATE stores SET store_id=?, branch_name=?, branch_location=?,phone=?, latitude=?, longitude=? WHERE id=?";
+        $stmt = mysqli_prepare($link, $sql);
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssi", $param_store_id, $param_branch_name, $param_branch_location,$param_phone, $param_lat, $param_long);
+            mysqli_stmt_bind_param($stmt, "isssssi", $param_store_id, $param_branch_name, $param_branch_location,$param_phone, $param_lat, $param_long, $param_id);
             
             // Set parameters
             $param_store_id = $store_id;
             $param_branch_name = $branch_name;
             $param_branch_location = $branch_location;
             $param_phone = $phone;
-            $param_lat = $lat;
-            $param_long = $long;
-            
+            $param_lat = $latitude;
+            $param_long = $longitude;
+            $param_id = $id;
+
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Records updated successfully. Redirect to landing page
@@ -127,8 +128,8 @@ if(empty($input_lat)){
                     $branch_name = $row["branch_name"];
                     $branch_location = $row["branch_location"];
                     $phone = $row["phone"];
-                    $lat = $row["lat"];
-                    $long = $row["long"];
+                    $latitude = $row["latitude"];
+                    $longitude = $row["longitude"];
                 } else{
                     // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
@@ -197,12 +198,12 @@ if(empty($input_lat)){
                         </div>
                         <div class="form-group">
                             <label>Branch Latitude</label>
-                            <input type="text" name="lat" class="form-control <?php echo (!empty($lat_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $lat; ?>">
+                            <input type="text" name="latitude" class="form-control <?php echo (!empty($lat_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $latitude; ?>">
                             <span class="invalid-feedback"><?php echo $lat_err;?></span>
                         </div>
                         <div class="form-group">
                             <label>Branch longitude</label>
-                            <input type="text" name="long" class="form-control <?php echo (!empty($long_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $long; ?>">
+                            <input type="text" name="longitude" class="form-control <?php echo (!empty($long_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $longitude; ?>">
                             <span class="invalid-feedback"><?php echo $long_err;?></span>
                         </div>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
